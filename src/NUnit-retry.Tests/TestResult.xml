@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Users\Sylvain\Documents\GitHub\NUnit-retry\src\NUnit-retry.Tests\NUnit-retry.Tests.csproj" total="3" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2013-11-15" time="19:06:36">
+  <environment nunit-version="2.6.3.13283" clr-version="2.0.50727.6400" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Users\Sylvain\Documents\GitHub\NUnit-retry\src\NUnit-retry.Tests" machine-name="SYLVAIN-PC" user="Sylvain" user-domain="SYLVAIN-PC" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Project" name="C:\Users\Sylvain\Documents\GitHub\NUnit-retry\src\NUnit-retry.Tests\NUnit-retry.Tests.csproj" executed="True" result="Success" success="True" time="0.057" asserts="0">
+    <results>
+      <test-suite type="Assembly" name="C:\Users\Sylvain\Documents\GitHub\NUnit-retry\src\NUnit-retry.Tests\bin\Debug\NUnit-retry.Tests.dll" executed="True" result="Success" success="True" time="0.044" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="NUnit_retry" executed="True" result="Success" success="True" time="0.044" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="0.044" asserts="0">
+                <results>
+                  <test-suite type="TestFixture" name="HelloWorld" executed="True" result="Success" success="True" time="0.042" asserts="0">
+                    <results>
+                      <test-case name="NUnit_retry.Tests.HelloWorld.One_Failure_On_Three_Should_Pass" executed="True" result="Success" success="True" time="0.000" asserts="0">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case>
+                      <test-case name="NUnit_retry.Tests.HelloWorld.UnAnnotatedTest" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+                      <test-case name="NUnit_retry.Tests.HelloWorld.When_SucceedOnce_Pass" executed="True" result="Success" success="True" time="0.000" asserts="0">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
