@@ -27,17 +27,38 @@ namespace NUnit_retry
             if (test is NUnitTestMethod)
             {
                 var testMethod = (NUnitTestMethod)test;
+
                 var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
+
+                if (testMethod.FixtureType != null)
+                {
+                    var fixtureAttrs =
+                        testMethod.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
+
+                    if (fixtureAttrs.Length > 0)
+                    {
+                        var retryAttr = (fixtureAttrs[0] as RetryAttribute);
+
+                        if (retryAttr != null)
+                        {
+                            test = new RetriedTestMethod(
+                                testMethod.Method,
+                                retryAttr.Times,
+                                retryAttr.RequiredPassCount);
+                        }
+                    }
+                }
 
                 if (attrs.Any())
                 {
                     var retryAttr = (attrs.First() as RetryAttribute);
+
                     if (retryAttr == null)
                     {
                         return test;
                     }
 
-                    test = new RetriedTestMethod(testMethod.Method, retryAttr.Times);
+                    test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
                 }
             }
 

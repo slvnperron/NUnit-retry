@@ -12,42 +12,45 @@ namespace NUnit_retry
 
     public class RetriedTestMethod : NUnitTestMethod
     {
+        private readonly int requiredPassCount;
+
         private readonly int tryCount;
 
-        public RetriedTestMethod(MethodInfo method, int tryCount)
+        public RetriedTestMethod(MethodInfo method, int tryCount, int requiredPassCount)
             : base(method)
         {
             this.tryCount = tryCount;
+            this.requiredPassCount = requiredPassCount;
         }
 
         public override TestResult Run(EventListener listener, ITestFilter filter)
         {
-            var failCount = 0;
-            TestResult successResult = null;
+            var successCount = 0;
+            TestResult failureResult = null;
 
             for (var i = 0; i < this.tryCount; i++)
             {
                 var result = base.Run(listener, filter);
 
-                if (TestFailed(result))
+                if (!TestFailed(result))
                 {
-                    if (++failCount > 1)
+                    if (i == 0)
+                    {
+                        return result;
+                    }
+
+                    if (++successCount >= this.requiredPassCount)
                     {
                         return result;
                     }
                 }
                 else
                 {
-                    successResult = result;
-
-                    if (i == 0)
-                    {
-                        return successResult;
-                    }
+                    failureResult = result;
                 }
             }
 
-            return successResult;
+            return failureResult;
         }
 
         private static bool TestFailed(TestResult result)
