@@ -10,6 +10,8 @@ TestResults.xml
 
 *.nupkg
 
+Packages/
+
 # Build results
 
 [Dd]ebug/

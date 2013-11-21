@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit-retry", "NUnit-retry\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit-retry.Tests", "NUnit-retry.Tests\NUnit-retry.Tests.csproj", "{DC5A8B5A-7127-43D2-BFA5-F32B27D6F43F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCity.NUnit.TestRunner.Proxy", "TeamCity.NUnit.TestRunner.Proxy\TeamCity.NUnit.TestRunner.Proxy.csproj", "{16D9CBB4-8534-45C3-A5B5-B2F19F7972AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCity.NUnit.TestRunner.Proxy.Retry", "TeamCity.NUnit.TestRunner.Proxy.Retry\TeamCity.NUnit.TestRunner.Proxy.Retry.csproj", "{360BF335-F0C9-44FC-A159-FEB5FA16E6DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{DC5A8B5A-7127-43D2-BFA5-F32B27D6F43F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC5A8B5A-7127-43D2-BFA5-F32B27D6F43F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC5A8B5A-7127-43D2-BFA5-F32B27D6F43F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D9CBB4-8534-45C3-A5B5-B2F19F7972AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D9CBB4-8534-45C3-A5B5-B2F19F7972AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D9CBB4-8534-45C3-A5B5-B2F19F7972AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D9CBB4-8534-45C3-A5B5-B2F19F7972AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{360BF335-F0C9-44FC-A159-FEB5FA16E6DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{360BF335-F0C9-44FC-A159-FEB5FA16E6DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{360BF335-F0C9-44FC-A159-FEB5FA16E6DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{360BF335-F0C9-44FC-A159-FEB5FA16E6DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
