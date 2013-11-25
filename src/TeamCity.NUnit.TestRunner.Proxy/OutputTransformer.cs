@@ -11,15 +11,13 @@ namespace TeamCity.NUnit.TestRunner.Proxy
     using System.Linq;
     using System.Xml.Linq;
 
-    using TypeScanner;
-
     public class OutputTransformer : IOutputTransformer
     {
         private readonly IList<IProxyExtension> extensions = new List<IProxyExtension>();
 
-        public OutputTransformer(IEnumerable<string> proxies, ITypeScanner scanner)
+        public OutputTransformer(IEnumerable<string> proxies, IPluginScanner scanner)
         {
-            var types = scanner.GetTypesOf<IProxyExtension>().Where(x => x.IsClass && !x.IsAbstract);
+            var types = scanner.Scan().ToList();
 
             var instances = types.Select(GetProxyFromType).ToArray();
 

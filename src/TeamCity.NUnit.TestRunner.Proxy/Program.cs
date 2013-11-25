@@ -10,8 +10,6 @@ namespace TeamCity.NUnit.TestRunner.Proxy
     using System.Collections.Generic;
     using System.IO;
 
-    using TypeScanner;
-
     internal class Program
     {
         private static void Main(string[] args)
@@ -20,7 +18,7 @@ namespace TeamCity.NUnit.TestRunner.Proxy
             var config = argsBindingConfiguration.CreateAndBind(args);
             ValidateConfiguration(config);
 
-            var outputTransformer = new OutputTransformer(config.Proxies, new TypeScanner());
+            var outputTransformer = new OutputTransformer(config.Proxies, new PluginScanner());
             var proxy = new SynchronousTestRunnerProxy(outputTransformer);
 
             proxy.Execute(config.TestRunnerPath, args);
@@ -34,7 +32,7 @@ namespace TeamCity.NUnit.TestRunner.Proxy
                 Environment.Exit(ExitCodes.BadConfiguration);
             }
 
-            if (configuration.Proxies.Count <= 0)
+            if (configuration.Proxies == null || configuration.Proxies.Count <= 0)
             {
                 Console.Error.WriteLine("Bad configuration: You must specify at least one proxy to use.");
                 Environment.Exit(ExitCodes.BadConfiguration);

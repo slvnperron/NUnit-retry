@@ -42,15 +42,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TypeScanner">
-      <HintPath>..\packages\TypeScanner.1.0.1.0\lib\net40\TypeScanner.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExitCodes.cs" />
     <Compile Include="IOutputTransformer.cs" />
+    <Compile Include="IPluginScanner.cs" />
     <Compile Include="IProxyExtension.cs" />
     <Compile Include="OutputTransformer.cs" />
+    <Compile Include="PluginScanner.cs" />
     <Compile Include="ProcessPriority.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
