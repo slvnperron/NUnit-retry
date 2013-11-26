@@ -21,7 +21,7 @@ namespace TeamCity.NUnit.TestRunner.Proxy
             var outputTransformer = new OutputTransformer(config.Proxies, new PluginScanner());
             var proxy = new SynchronousTestRunnerProxy(outputTransformer);
 
-            proxy.Execute(config.TestRunnerPath, args);
+            proxy.Execute(config.TestRunnerPath, config.Args);
         }
 
         private static void ValidateConfiguration(ArgsConfiguration configuration)
@@ -40,7 +40,9 @@ namespace TeamCity.NUnit.TestRunner.Proxy
 
             if (!File.Exists(configuration.TestRunnerPath))
             {
-                Console.Error.WriteLine("Bad configuration: Path to TestRunner must be valid and file must exist.");
+                Console.Error.WriteLine(
+                    "Bad configuration: Path to TestRunner must be valid and file must exist ("
+                    + configuration.TestRunnerPath + ").");
                 Environment.Exit(ExitCodes.BadConfiguration);
             }
         }
@@ -49,6 +51,7 @@ namespace TeamCity.NUnit.TestRunner.Proxy
         {
             public List<string> Proxies { get; set; }
             public string TestRunnerPath { get; set; }
+            public string Args { get; set; }
         }
     }
 }

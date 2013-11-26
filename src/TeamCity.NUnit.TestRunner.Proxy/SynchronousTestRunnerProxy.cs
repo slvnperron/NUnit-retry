@@ -19,9 +19,9 @@ namespace TeamCity.NUnit.TestRunner.Proxy
             this.transformer = transformer;
         }
 
-        public void Execute(string testRunnerPath, string[] args)
+        public XDocument Execute(string testRunnerPath, string args)
         {
-            var processStartInfo = new ProcessStartInfo(testRunnerPath, string.Join(" ", args))
+            var processStartInfo = new ProcessStartInfo(testRunnerPath, args)
                                    {
                                        RedirectStandardOutput = true,
                                        UseShellExecute = false
@@ -35,9 +35,7 @@ namespace TeamCity.NUnit.TestRunner.Proxy
 
             var xmlDocument = this.TranformToXDocument(output);
 
-            xmlDocument = this.transformer.TransformOutput(xmlDocument);
-
-            Console.Out.Write(this.TransformToString(xmlDocument));
+            return this.transformer.TransformOutput(xmlDocument);
         }
 
         public XDocument TranformToXDocument(string document)
