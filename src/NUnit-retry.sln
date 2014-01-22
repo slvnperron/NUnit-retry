@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCity.NUnit.TestRunner.Proxy.Retry", "TeamCity.NUnit.TestRunner.Proxy.Retry\TeamCity.NUnit.TestRunner.Proxy.Retry.csproj", "{360BF335-F0C9-44FC-A159-FEB5FA16E6DA}"
 EndProject
 Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = c1dbd8a5-1bc4-4fff-888b-93f5e59e38a1
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

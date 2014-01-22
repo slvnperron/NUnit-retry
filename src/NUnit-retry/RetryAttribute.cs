@@ -8,7 +8,7 @@ namespace NUnit_retry
 {
     using System;
 
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class RetryAttribute : Attribute
     {
         public RetryAttribute(int times = 5, int requiredPassCount = 1)

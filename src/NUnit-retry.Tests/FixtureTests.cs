@@ -25,4 +25,20 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
     }
+
+    public class InheritedAttribute : FixtureTests
+    {
+        [Test]
+        public void Inherited_ShouldSucceed_One_Time_Out_Of_3()
+        {
+            InterTestContext.IncrementMethodTries("inherited_1_on_3");
+
+            if (InterTestContext.InterTestCounts["inherited_1_on_3"] == 1)
+            {
+                Assert.Fail();
+            }
+
+            Assert.Pass();
+        }
+    }
 }
