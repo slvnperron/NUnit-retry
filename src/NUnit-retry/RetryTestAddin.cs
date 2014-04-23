@@ -4,6 +4,11 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Collections;
+using System.Collections.Specialized;
+using NUnit.Framework;
+
 namespace NUnit_retry
 {
     using System.Linq;
@@ -29,13 +34,16 @@ namespace NUnit_retry
                 var testMethod = (NUnitTestMethod)test;
 
                 var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
-
+                var explicitAttrs = member.GetCustomAttributes(typeof(ExplicitAttribute), true).ToArray();
+                var ignoreAttrs = member.GetCustomAttributes(typeof (IgnoreAttribute), true).ToArray();
+                var properties = test.Properties;
+                
                 if (testMethod.FixtureType != null)
                 {
                     var fixtureAttrs =
                         testMethod.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
 
-                    if (fixtureAttrs.Length > 0)
+                    if (fixtureAttrs.Length > 0 && explicitAttrs.Length < 1 && ignoreAttrs.Length < 1)
                     {
                         var retryAttr = (fixtureAttrs[0] as RetryAttribute);
 
@@ -45,6 +53,7 @@ namespace NUnit_retry
                                 testMethod.Method,
                                 retryAttr.Times,
                                 retryAttr.RequiredPassCount);
+                            test.Properties = properties;
                         }
                     }
                 }
@@ -57,8 +66,8 @@ namespace NUnit_retry
                     {
                         return test;
                     }
-
                     test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
+                    test.Properties = properties;
                 }
             }
 
