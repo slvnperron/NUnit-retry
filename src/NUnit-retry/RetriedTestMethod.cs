@@ -18,8 +18,6 @@ namespace NUnit_retry
 
         private readonly int tryCount;
 
-        protected static int repeatedFailures = 0;
-
         public RetriedTestMethod(MethodInfo method, int tryCount, int requiredPassCount)
             : base(method)
         {
@@ -45,9 +43,6 @@ namespace NUnit_retry
 
                     if (++successCount >= this.requiredPassCount)
                     {
-                        // Small hack for teamCity
-                        if (repeatedFailures == 0)
-                            Console.WriteLine("\n##teamcity[buildStatus status='SUCCESS' text='{build.status.text}. Important: all failed tests are passed succesfully after fail.']\n");
                         return result;
                     }
                 }
@@ -57,7 +52,6 @@ namespace NUnit_retry
                 }
             }
 
-            repeatedFailures++;
             return failureResult;
         }
 
