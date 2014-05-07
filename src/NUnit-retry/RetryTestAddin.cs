@@ -4,9 +4,6 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections;
-using System.Collections.Specialized;
 using NUnit.Framework;
 
 namespace NUnit_retry
@@ -31,43 +28,41 @@ namespace NUnit_retry
         {
             if (test is NUnitTestMethod)
             {
-                var testMethod = (NUnitTestMethod)test;
-
-                var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
                 var explicitAttrs = member.GetCustomAttributes(typeof(ExplicitAttribute), true).ToArray();
-                var ignoreAttrs = member.GetCustomAttributes(typeof (IgnoreAttribute), true).ToArray();
-                var properties = test.Properties;
-                
-                if (testMethod.FixtureType != null)
+                var ignoreAttrs = member.GetCustomAttributes(typeof(IgnoreAttribute), true).ToArray();
+
+                if (explicitAttrs.Length < 1 && ignoreAttrs.Length < 1)
                 {
-                    var fixtureAttrs =
-                        testMethod.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
+                    var testMethod = (NUnitTestMethod) test;
 
-                    if (fixtureAttrs.Length > 0 && explicitAttrs.Length < 1 && ignoreAttrs.Length < 1)
+                    var attrs = member.GetCustomAttributes(typeof (RetryAttribute), true);
+                    var properties = test.Properties;
+                    RetryAttribute retryAttr = null;
+
+                    if (attrs.Any())
                     {
-                        var retryAttr = (fixtureAttrs[0] as RetryAttribute);
+                        retryAttr = (attrs.First() as RetryAttribute);
+                    }
 
-                        if (retryAttr != null)
+                    if (retryAttr == null && testMethod.FixtureType != null)
+                    {
+                        var fixtureAttrs =
+                            testMethod.FixtureType.GetCustomAttributes(typeof (RetryAttribute), true).ToArray();
+
+                        if (fixtureAttrs.Length > 0)
                         {
-                            test = new RetriedTestMethod(
-                                testMethod.Method,
-                                retryAttr.Times,
-                                retryAttr.RequiredPassCount);
-                            test.Properties = properties;
+                            retryAttr = (fixtureAttrs[0] as RetryAttribute);
                         }
                     }
-                }
 
-                if (attrs.Any())
-                {
-                    var retryAttr = (attrs.First() as RetryAttribute);
-
-                    if (retryAttr == null)
+                    if (retryAttr != null)
                     {
-                        return test;
+                        test = new RetriedTestMethod(
+                            testMethod.Method,
+                            retryAttr.Times,
+                            retryAttr.RequiredPassCount);
+                        test.Properties = properties;
                     }
-                    test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
-                    test.Properties = properties;
                 }
             }
 
