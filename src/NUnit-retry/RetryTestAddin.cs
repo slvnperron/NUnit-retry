@@ -19,8 +19,8 @@ namespace NUnit_retry
     {
         public bool Install(IExtensionHost host)
         {
-            var testCaseBuilders = host.GetExtensionPoint("TestDecorators");
-            testCaseBuilders.Install(this);
+            var testDecorators = host.GetExtensionPoint("TestDecorators");
+            testDecorators.Install(this);
             return true;
         }
 
