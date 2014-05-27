@@ -6,19 +6,20 @@
 
 namespace NUnit_retry
 {
-    using System.Reflection;
-
     using NUnit.Core;
 
-    public class RetriedTestMethod : NUnitTestMethod
+    public class RetriedTestMethod : Test
     {
         private readonly int requiredPassCount;
 
         private readonly int tryCount;
 
-        public RetriedTestMethod(MethodInfo method, int tryCount, int requiredPassCount)
-            : base(method)
+        private readonly NUnitTestMethod backingTest;
+
+        public RetriedTestMethod(NUnitTestMethod test, int tryCount, int requiredPassCount)
+            :base(test.TestName)
         {
+            this.backingTest = test;
             this.tryCount = tryCount;
             this.requiredPassCount = requiredPassCount;
         }
@@ -30,7 +31,7 @@ namespace NUnit_retry
 
             for (var i = 0; i < this.tryCount; i++)
             {
-                var result = base.Run(listener, filter);
+                var result = backingTest.Run(listener, filter);
 
                 if (!TestFailed(result))
                 {
@@ -56,6 +57,17 @@ namespace NUnit_retry
         private static bool TestFailed(TestResult result)
         {
             return result.ResultState == ResultState.Error || result.ResultState == ResultState.Failure;
+        }
+
+        public override string TestType
+        {
+            get { return backingTest.TestType; }
+        }
+
+        public override object Fixture
+        {
+            get { return backingTest.Fixture; }
+            set { backingTest.Fixture = value; }
         }
     }
 }

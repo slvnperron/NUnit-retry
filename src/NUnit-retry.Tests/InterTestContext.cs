@@ -21,5 +21,10 @@ namespace NUnit_retry.Tests
 
             InterTestCounts[methodKey] = InterTestCounts[methodKey] + 1;
         }
+
+        public static void ResetInterTestCounts()
+        {
+            InterTestCounts.Clear(); 
+        }
     }
 }

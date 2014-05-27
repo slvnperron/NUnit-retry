@@ -4,6 +4,7 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NUnit_retry
@@ -33,10 +34,9 @@ namespace NUnit_retry
 
                 if (explicitAttrs.Length < 1 && ignoreAttrs.Length < 1)
                 {
-                    var testMethod = (NUnitTestMethod) test;
+                    var testMethod = (NUnitTestMethod)test;
 
-                    var attrs = member.GetCustomAttributes(typeof (RetryAttribute), true);
-                    var properties = test.Properties;
+                    var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
                     RetryAttribute retryAttr = null;
 
                     if (attrs.Any())
@@ -47,7 +47,7 @@ namespace NUnit_retry
                     if (retryAttr == null && testMethod.FixtureType != null)
                     {
                         var fixtureAttrs =
-                            testMethod.FixtureType.GetCustomAttributes(typeof (RetryAttribute), true).ToArray();
+                            testMethod.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
 
                         if (fixtureAttrs.Length > 0)
                         {
@@ -58,11 +58,62 @@ namespace NUnit_retry
                     if (retryAttr != null)
                     {
                         test = new RetriedTestMethod(
-                            testMethod.Method,
+                            testMethod,
                             retryAttr.Times,
                             retryAttr.RequiredPassCount);
-                        test.Properties = properties;
                     }
+                }
+            }
+            else if (test is ParameterizedMethodSuite)
+            {
+                var testMethodSuite = (ParameterizedMethodSuite)test;
+                var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
+                RetryAttribute retryAttr = null;
+
+                if (attrs.Any())
+                {
+                    retryAttr = (attrs.First() as RetryAttribute);
+                }
+
+                if (retryAttr == null && testMethodSuite.FixtureType != null)
+                {
+                    var fixtureAttrs =
+                        testMethodSuite.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
+
+                    if (fixtureAttrs.Length > 0)
+                    {
+                        retryAttr = (fixtureAttrs[0] as RetryAttribute);
+                    }
+                }
+
+                if (retryAttr != null)
+                {
+                    System.Collections.IList newTests = new List<Test>();
+                    foreach (Test childTest in testMethodSuite.Tests)
+                    {
+                        if (childTest is NUnitTestMethod)
+                        {
+                            NUnitTestMethod oldTest = (NUnitTestMethod)childTest;
+                            RetriedTestMethod newTest = new RetriedTestMethod(
+                                oldTest,
+                                retryAttr.Times,
+                                retryAttr.RequiredPassCount);
+
+                            newTests.Add(newTest);
+                        }
+                        else
+                        {
+                            newTests.Add(childTest);
+                        }
+                    }
+
+                    testMethodSuite.Tests.Clear();
+                    foreach (Test newTest in newTests)
+                    {
+                        testMethodSuite.Add(newTest);
+                    }
+
+                    return testMethodSuite;
                 }
             }
 
