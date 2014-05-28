@@ -24,37 +24,6 @@ namespace NUnit_retry.Tests
 
             Assert.Pass();
         }
-
-        [TestCase(TestName = "TestCaseName")]
-        public void ShouldSucceed_One_Time_Out_Of_3_TestCase()
-        {
-            InterTestContext.IncrementMethodTries("class_1_on_3_TestCase");
-
-            if (InterTestContext.InterTestCounts["class_1_on_3_TestCase"] == 1)
-            {
-                Assert.Fail();
-            }
-
-            Assert.Pass();
-        }
-
-        public TestCaseData[] CaseSource
-        {
-            get { return new TestCaseData[] { new TestCaseData().SetName("TestCaseSourceName"), }; }
-        }
-
-        [TestCaseSource("CaseSource")]
-        public void ShouldSucceed_One_Time_Out_Of_3_TestCaseSource()
-        {
-            InterTestContext.IncrementMethodTries("class_1_on_3_TestCaseSource");
-
-            if (InterTestContext.InterTestCounts["class_1_on_3_TestCaseSource"] == 1)
-            {
-                Assert.Fail();
-            }
-
-            Assert.Pass();
-        }
     }
 
     public class InheritedAttribute : FixtureTests
