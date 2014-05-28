@@ -27,97 +27,75 @@ namespace NUnit_retry
 
         public Test Decorate(Test test, MemberInfo member)
         {
-            if (test is NUnitTestMethod)
+            var explicitAttrs = member.GetCustomAttributes(typeof(ExplicitAttribute), true);
+            var ignoreAttrs = member.GetCustomAttributes(typeof(IgnoreAttribute), true).ToArray();
+
+            if (!explicitAttrs.Any() && !ignoreAttrs.Any())
             {
-                var explicitAttrs = member.GetCustomAttributes(typeof(ExplicitAttribute), true).ToArray();
-                var ignoreAttrs = member.GetCustomAttributes(typeof(IgnoreAttribute), true).ToArray();
-
-                if (explicitAttrs.Length < 1 && ignoreAttrs.Length < 1)
-                {
-                    var testMethod = (NUnitTestMethod)test;
-
-                    var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
-                    RetryAttribute retryAttr = null;
-
-                    if (attrs.Any())
-                    {
-                        retryAttr = (attrs.First() as RetryAttribute);
-                    }
-
-                    if (retryAttr == null && testMethod.FixtureType != null)
-                    {
-                        var fixtureAttrs =
-                            testMethod.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
-
-                        if (fixtureAttrs.Length > 0)
-                        {
-                            retryAttr = (fixtureAttrs[0] as RetryAttribute);
-                        }
-                    }
-
-                    if (retryAttr != null)
-                    {
-                        test = new RetriedTestMethod(
-                            testMethod,
-                            retryAttr.Times,
-                            retryAttr.RequiredPassCount);
-                    }
-                }
-            }
-            else if (test is ParameterizedMethodSuite)
-            {
-                var testMethodSuite = (ParameterizedMethodSuite)test;
-                var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
-                RetryAttribute retryAttr = null;
-
-                if (attrs.Any())
-                {
-                    retryAttr = (attrs.First() as RetryAttribute);
-                }
-
-                if (retryAttr == null && testMethodSuite.FixtureType != null)
-                {
-                    var fixtureAttrs =
-                        testMethodSuite.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
-
-                    if (fixtureAttrs.Length > 0)
-                    {
-                        retryAttr = (fixtureAttrs[0] as RetryAttribute);
-                    }
-                }
+                RetryAttribute retryAttr = GetRetryAttribute(member, test);
 
                 if (retryAttr != null)
                 {
-                    System.Collections.IList newTests = new List<Test>();
-                    foreach (Test childTest in testMethodSuite.Tests)
+                    if (test is NUnitTestMethod)
                     {
-                        if (childTest is NUnitTestMethod)
-                        {
-                            NUnitTestMethod oldTest = (NUnitTestMethod)childTest;
-                            RetriedTestMethod newTest = new RetriedTestMethod(
-                                oldTest,
-                                retryAttr.Times,
-                                retryAttr.RequiredPassCount);
-
-                            newTests.Add(newTest);
-                        }
-                        else
-                        {
-                            newTests.Add(childTest);
-                        }
+                        return new RetriedTestMethod(
+                            (NUnitTestMethod)test,
+                            retryAttr.Times,
+                            retryAttr.RequiredPassCount);
                     }
-
-                    testMethodSuite.Tests.Clear();
-                    foreach (Test newTest in newTests)
+                    
+                    if (test is ParameterizedMethodSuite)
                     {
-                        testMethodSuite.Add(newTest);
-                    }
+                        var testMethodSuite = (ParameterizedMethodSuite)test;
 
-                    return testMethodSuite;
+                        System.Collections.IList newTests = new List<Test>();
+                        foreach (Test childTest in testMethodSuite.Tests)
+                        {
+                            if (childTest is NUnitTestMethod)
+                            {
+                                NUnitTestMethod oldTest = (NUnitTestMethod)childTest;
+                                RetriedTestMethod newTest = new RetriedTestMethod(
+                                    oldTest,
+                                    retryAttr.Times,
+                                    retryAttr.RequiredPassCount);
+
+                                newTests.Add(newTest);
+                            }
+                            else
+                            {
+                                newTests.Add(childTest);
+                            }
+                        }
+
+                        testMethodSuite.Tests.Clear();
+                        foreach (Test newTest in newTests)
+                        {
+                            testMethodSuite.Add(newTest);
+                        }
+
+                        return testMethodSuite;
+                    }
                 }
             }
-
             return test;
+        }
+
+        private static RetryAttribute GetRetryAttribute(MemberInfo member, Test testMethodSuite)
+        {
+            RetryAttribute retryAttr = GetRetryAttribute(member);
+
+            if (retryAttr == null && testMethodSuite.FixtureType != null)
+            {
+                retryAttr = GetRetryAttribute(testMethodSuite.FixtureType);
+            }
+            return retryAttr;
+        }
+
+        private static RetryAttribute GetRetryAttribute(MemberInfo member)
+        {
+            IEnumerable<RetryAttribute> attrs = member.GetCustomAttributes(typeof(RetryAttribute), true)
+                .Cast<RetryAttribute>();
+            return attrs.FirstOrDefault();
         }
     }
 }
