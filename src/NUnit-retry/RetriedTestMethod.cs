@@ -22,6 +22,12 @@ namespace NUnit_retry
             this.backingTest = test;
             this.tryCount = tryCount;
             this.requiredPassCount = requiredPassCount;
+
+            this.Properties = backingTest.Properties;
+            this.Categories = backingTest.Categories;
+            this.Description = backingTest.Description;
+            this.IgnoreReason = backingTest.IgnoreReason;
+            this.RunState = backingTest.RunState;
         }
 
         public override TestResult Run(EventListener listener, ITestFilter filter)
