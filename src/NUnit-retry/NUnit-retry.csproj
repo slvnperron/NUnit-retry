@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RetriedTestSuiteMethod.cs" />
     <Compile Include="RetryTestAddin.cs" />
     <Compile Include="RetriedTestMethod.cs" />
     <Compile Include="RetryAttribute.cs" />

@@ -4,9 +4,6 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-
 namespace NUnit_retry
 {
     using System.Linq;
@@ -27,11 +24,11 @@ namespace NUnit_retry
 
         public Test Decorate(Test test, MemberInfo member)
         {
+            var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
+
             if (test is NUnitTestMethod)
             {
                 var testMethod = (NUnitTestMethod)test;
-
-                var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
 
                 if (testMethod.FixtureType != null)
                 {
@@ -44,7 +41,7 @@ namespace NUnit_retry
 
                         if (retryAttr != null)
                         {
-                            test = new TestMethodExtension(
+                            test = new RetriedTestMethod(
                                 testMethod.Method,
                                 retryAttr.Times,
                                 retryAttr.RequiredPassCount);
@@ -61,89 +58,39 @@ namespace NUnit_retry
                         return test;
                     }
 
-                    test = new TestMethodExtension(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
+                    test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
                 }
             }
 
-            else
+            if (test is ParameterizedMethodSuite)
             {
-                if (test is ParameterizedMethodSuite)
+                var suite = test as ParameterizedMethodSuite;
+                RetriedParameterizedTestSuiteMethod outputSuite;
+
+                if (attrs.Any())
                 {
-                    var suite = test as ParameterizedMethodSuite;
+                    var retryAttr = (attrs.First() as RetryAttribute);
 
-                    var outputSuite = new ParameterizedMethodSuiteExtension(member as MethodInfo, 6, 3);
-                    NUnitFramework.ApplyCommonAttributes(member, outputSuite);
+                    if (retryAttr == null) return test;
 
-                    outputSuite.RunState = suite.RunState;
-                    
-                    foreach (NUnitTestMethod testMethod in suite.Tests)
-                    {
-                        outputSuite.Add(testMethod);
-                    }
-                    return outputSuite;
+                    outputSuite = new RetriedParameterizedTestSuiteMethod(member as MethodInfo, retryAttr.Times, retryAttr.RequiredPassCount);
                 }
+                else
+                {
+                    return test;
+                }
+
+                NUnitFramework.ApplyCommonAttributes(member, outputSuite);
+
+                outputSuite.RunState = suite.RunState;
+                foreach (NUnitTestMethod testMethod in suite.Tests)
+                {
+                    outputSuite.Add(testMethod);
+                }
+                return outputSuite;
             }
+
             return test;
-        }
-
-        public class ParameterizedMethodSuiteExtension : ParameterizedMethodSuite
-        {
-            private readonly int _tryCount;
-            private readonly int _requiredPassCount;
-            public ParameterizedMethodSuiteExtension(MethodInfo method, int run, int requiredPass)
-                : base(method)
-            {
-                _tryCount = run;
-                _requiredPassCount = requiredPass;
-            }
-
-            public override TestResult Run(EventListener listener, ITestFilter filter)
-            {
-                var successCount = 0;
-                TestResult failureResult = null;
-
-                for (var i = 0; i < _tryCount; i++)
-                {
-                    var result = base.Run(listener, filter);
-
-                    if (!TestFailed(result))
-                    {
-                        if (++successCount >= _requiredPassCount)
-                        {
-                            //result.SetResult(result.ResultState, "", result.StackTrace, result.FailureSite);
-                            return result;
-                        }
-                    }
-                    else
-                    {
-                        //result.SetResult(result.ResultState, "", result.StackTrace, result.FailureSite);
-                        failureResult = result;
-                    }
-                }
-
-                return failureResult;
-            }
-            private static bool TestFailed(TestResult result)
-            {
-                return result.ResultState == ResultState.Error || result.ResultState == ResultState.Failure;
-            }
-        }
-
-        public class TestMethodExtension : RetriedTestMethod
-        {
-            //private readonly List<Attribute> _tags;
-            public TestMethodExtension(MethodInfo methodInfo, int run, int requiredPass)
-                : base(methodInfo,run,requiredPass)
-            {
-                //_tags = tags;
-            }
-
-            //public override TestResult Run(EventListener listener, ITestFilter filter)
-            //{
-            //    TestResult result = base.Run(listener, filter);
-            //    //
-            //    return result;
-            //}
         }
     }
 }

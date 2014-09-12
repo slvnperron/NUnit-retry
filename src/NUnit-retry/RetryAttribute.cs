@@ -18,8 +18,8 @@ namespace NUnit_retry
                 throw new Exception("Required Pass Count must be lower or equal than the number of retries.");
             }
 
-            this.Times = times;
-            this.RequiredPassCount = requiredPassCount;
+            Times = times;
+            RequiredPassCount = requiredPassCount;
         }
 
         public int RequiredPassCount { get; set; }

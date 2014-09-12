@@ -1,26 +1,18 @@
-// /////////////////////////////////////////////////////////////////////
-//  This is free software licensed under the NUnit license. You
-//  may obtain a copy of the license as well as information regarding
-//  copyright ownership at http://nunit.org.    
-// /////////////////////////////////////////////////////////////////////
+﻿using System.Reflection;
+using NUnit.Core;
 
 namespace NUnit_retry
 {
-    using System.Reflection;
-
-    using NUnit.Core;
-
-    public class RetriedTestMethod : NUnitTestMethod
+    public class RetriedParameterizedTestSuiteMethod : ParameterizedMethodSuite
     {
+        private readonly int _tryCount;
         private readonly int _requiredPassCount;
 
-        private readonly int _tryCount;
-
-        public RetriedTestMethod(MethodInfo method, int tryCount, int requiredPassCount)
+        public RetriedParameterizedTestSuiteMethod(MethodInfo method, int run, int requiredPass)
             : base(method)
         {
-            _tryCount = tryCount;
-            _requiredPassCount = requiredPassCount;
+            _tryCount = run;
+            _requiredPassCount = requiredPass;
         }
 
         public override TestResult Run(EventListener listener, ITestFilter filter)

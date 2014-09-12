@@ -21,7 +21,7 @@ namespace NUnit_retry.Tests
         {
         }
 
-        [Test, Retry(3,1)]
+        [Test, Category("sgdfg")]
         public void one_out_of_three()
         {
             _i++;
@@ -39,7 +39,7 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [Test, Retry(4, 2)]
+        [Test, Category("adsf")]
         public void Two_out_of_four()
         {
             
@@ -57,7 +57,7 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase(), Retry(5, 2)]
+        [TestCase()]
         public void two_Out_of_five()
         {
             _i++;
@@ -76,7 +76,7 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase(), Retry(4, 2)]
+        [TestCase()]
         public void two_Out_of_four1()
         {
             _i++;
@@ -95,14 +95,14 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase(), Retry(3, 3)]
+        [TestCase()]
         public void allPass()
         {
             _i++;
             Console.WriteLine("{0}", _i);
             Console.WriteLine("{0}", _run);
 
-            if (_run == 10 || _run == 11)
+            if (_run == 2 || _run == 3)
             {
                 _run++;
                 Console.WriteLine("Failed");
@@ -114,10 +114,10 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase(0), Retry]
-        [TestCase(1), Retry]
-        [TestCase(3), Retry]
-        public void PassAtSomePoint(int runTimes)
+        [TestCase(0, "abc"),  Category("a")]
+        [TestCase(1, "123"),  Category("a")]
+        [TestCase(3, "#$%"),  Category("a")]
+        public void PassAtSomePoint(int runTimes, string msg)
         {
             _i++;
             Console.WriteLine("{0}", _i);
@@ -126,13 +126,25 @@ namespace NUnit_retry.Tests
             if (_run == runTimes)
             {
                 _run++;
-                Console.WriteLine("Failed");
+                Console.WriteLine("Failed {0}", msg);
                 Assert.Fail();
             }
-            Console.WriteLine("Passed");
+            Console.WriteLine("Passed {0}", msg);
             _run++;
 
             Assert.Pass();
+        }
+
+        [TestCase("abc")]
+        public void Fail(string output)
+        {
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
+
+            _run++;
+            Console.WriteLine("Failed {0}", output);
+            Assert.Fail();
         }
     }
 }
