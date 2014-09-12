@@ -28,24 +28,21 @@ namespace NUnit_retry
             var successCount = 0;
             TestResult failureResult = null;
 
-            for (var i = 0; i < this.tryCount; i++)
+            for (var i = 0; i < tryCount; i++)
             {
                 var result = base.Run(listener, filter);
 
                 if (!TestFailed(result))
                 {
-                    if (i == 0)
+                    if (++successCount >= requiredPassCount)
                     {
-                        return result;
-                    }
-
-                    if (++successCount >= this.requiredPassCount)
-                    {
+                        result.SetResult(result.ResultState, "", result.StackTrace,result.FailureSite);
                         return result;
                     }
                 }
                 else
                 {
+                    result.SetResult(result.ResultState, "", result.StackTrace, result.FailureSite);
                     failureResult = result;
                 }
             }

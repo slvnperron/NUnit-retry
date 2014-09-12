@@ -4,6 +4,8 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace NUnit_retry.Tests
 {
     using NUnit.Framework;
@@ -11,36 +13,124 @@ namespace NUnit_retry.Tests
     [TestFixture]
     public class MethodTests
     {
-        [Test]
-        [Retry(Times = 3, RequiredPassCount = 2)]
-        public void One_Failure_On_Three_Should_Pass()
-        {
-            InterTestContext.IncrementMethodTries("1_on_3");
+        private int _i = 0;
+        private int _run = 0;
 
-            if (InterTestContext.InterTestCounts["1_on_3"] == 1)
+        [SetUp]
+        public void SetUp()
+        {
+        }
+
+        [Test, Retry(3,1)]
+        public void one_out_of_three()
+        {
+            _i++;
+            Console.WriteLine("{0}",_i);
+            Console.WriteLine("{0}",_run);
+
+            if (_run == 0 || _run == 1)
             {
+                _run++;
+                Console.WriteLine("Failed");
                 Assert.Fail();
             }
+            Console.WriteLine("Passed");
+            _run++;
+            Assert.Pass();
+        }
+
+        [Test, Retry(4, 2)]
+        public void Two_out_of_four()
+        {
+            
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
+
+            if (_run == 0 || _run == 1)
+            {
+                _run++;
+                Console.WriteLine("Failed");
+                Assert.Fail();
+            }
+            Console.WriteLine("Passed");
+            Assert.Pass();
+        }
+
+        [TestCase(), Retry(5, 2)]
+        public void two_Out_of_five()
+        {
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
+
+            if (_run == 0 || _run == 1 || _run == 2)
+            {
+                _run++;
+                Console.WriteLine("Failed");
+                Assert.Fail();
+            }
+            Console.WriteLine("Passed");
+            _run++;
 
             Assert.Pass();
         }
 
-        [Test]
-        public void UnAnnotatedTest()
+        [TestCase(), Retry(4, 2)]
+        public void two_Out_of_four1()
         {
-            Assert.IsTrue(true);
-        }
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
 
-        [Test]
-        [Retry]
-        public void When_SucceedOnce_Pass()
-        {
-            InterTestContext.IncrementMethodTries("once");
-
-            if (InterTestContext.InterTestCounts["once"] == 2)
+            if (_run == 1 || _run == 3)
             {
+                _run++;
+                Console.WriteLine("Failed");
                 Assert.Fail();
             }
+            Console.WriteLine("Passed");
+            _run++;
+
+            Assert.Pass();
+        }
+
+        [TestCase(), Retry(3, 3)]
+        public void allPass()
+        {
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
+
+            if (_run == 10 || _run == 11)
+            {
+                _run++;
+                Console.WriteLine("Failed");
+                Assert.Fail();
+            }
+            Console.WriteLine("Passed");
+            _run++;
+
+            Assert.Pass();
+        }
+
+        [TestCase(0), Retry]
+        [TestCase(1), Retry]
+        [TestCase(3), Retry]
+        public void PassAtSomePoint(int runTimes)
+        {
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
+
+            if (_run == runTimes)
+            {
+                _run++;
+                Console.WriteLine("Failed");
+                Assert.Fail();
+            }
+            Console.WriteLine("Passed");
+            _run++;
 
             Assert.Pass();
         }
