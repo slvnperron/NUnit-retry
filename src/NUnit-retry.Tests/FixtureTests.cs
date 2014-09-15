@@ -1,26 +1,36 @@
+﻿// /////////////////////////////////////////////////////////////////////
+// This is free software licensed under the NUnit license. You
+// may obtain a copy of the license as well as information regarding
+// copyright ownership at http://nunit.org.
 // /////////////////////////////////////////////////////////////////////
-//  This is free software licensed under the NUnit license. You
-//  may obtain a copy of the license as well as information regarding
-//  copyright ownership at http://nunit.org.    
-// /////////////////////////////////////////////////////////////////////
+
+using System;
+using NUnit.Framework;
 
 namespace NUnit_retry.Tests
 {
-    using NUnit.Framework;
-
     [TestFixture]
-    [Retry]
+    [Retry]// 3 run 1 requiredPass
     public class FixtureTests
     {
+        private int _i;
+        private int _run;
+
         [Test]
         public void ShouldSucceed_One_Time_Out_Of_3()
         {
-            InterTestContext.IncrementMethodTries("class_1_on_3");
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
 
-            if (InterTestContext.InterTestCounts["class_1_on_3"] == 1)
+            if (_run == 0 || _run == 1)
             {
+                _run++;
+                Console.WriteLine("Failed");
                 Assert.Fail();
             }
+            Console.WriteLine("Passed");
+            _run++;
 
             Assert.Pass();
         }
@@ -28,15 +38,24 @@ namespace NUnit_retry.Tests
 
     public class InheritedAttribute : FixtureTests
     {
+        private int _i;
+        private int _run;
+
         [Test]
         public void Inherited_ShouldSucceed_One_Time_Out_Of_3()
         {
-            InterTestContext.IncrementMethodTries("inherited_1_on_3");
+            _i++;
+            Console.WriteLine("{0}", _i);
+            Console.WriteLine("{0}", _run);
 
-            if (InterTestContext.InterTestCounts["inherited_1_on_3"] == 1)
+            if (_run == 0 || _run == 1)
             {
+                _run++;
+                Console.WriteLine("Failed");
                 Assert.Fail();
             }
+            Console.WriteLine("Passed");
+            _run++;
 
             Assert.Pass();
         }

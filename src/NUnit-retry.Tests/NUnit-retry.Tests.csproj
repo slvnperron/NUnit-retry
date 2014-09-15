@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FixtureTests.cs" />
-    <Compile Include="InterTestContext.cs" />
     <Compile Include="MethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
