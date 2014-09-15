@@ -13,8 +13,8 @@ namespace NUnit_retry.Tests
     [TestFixture]
     public class MethodTests
     {
-        private int _i = 0;
-        private int _run = 0;
+        private int _i;
+        private int _run;
 
         [SetUp]
         public void SetUp()
@@ -96,7 +96,7 @@ namespace NUnit_retry.Tests
         }
 
         [TestCase(), Category("D"), Retry()]
-        public void OnePass()
+        public void Default_one_out_of_Three()
         {
             _i++;
             Console.WriteLine("{0}", _i);
@@ -135,7 +135,7 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase("H"), Retry(3), Category(("H"))]
+        [TestCase("H"), Retry(4), Category(("H"))]
         public void Fail(string output)
         {
             _i++;
