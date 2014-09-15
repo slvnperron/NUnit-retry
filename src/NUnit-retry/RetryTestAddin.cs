@@ -29,7 +29,7 @@ namespace NUnit_retry
             if (test is NUnitTestMethod)
             {
                 var testMethod = (NUnitTestMethod)test;
-
+                
                 if (testMethod.FixtureType != null)
                 {
                     var fixtureAttrs =
@@ -60,6 +60,7 @@ namespace NUnit_retry
 
                     test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
                 }
+                NUnitFramework.ApplyCommonAttributes(member, test);
             }
 
             if (test is ParameterizedMethodSuite)
@@ -89,7 +90,6 @@ namespace NUnit_retry
                 }
                 return outputSuite;
             }
-
             return test;
         }
     }

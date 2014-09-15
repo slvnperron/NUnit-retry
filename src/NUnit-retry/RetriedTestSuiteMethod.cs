@@ -1,4 +1,10 @@
-﻿using System.Reflection;
+﻿// /////////////////////////////////////////////////////////////////////
+//  This is free software licensed under the NUnit license. You
+//  may obtain a copy of the license as well as information regarding
+//  copyright ownership at http://nunit.org.    
+// /////////////////////////////////////////////////////////////////////
+
+using System.Reflection;
 using NUnit.Core;
 
 namespace NUnit_retry
@@ -33,6 +39,7 @@ namespace NUnit_retry
                 }
                 else
                 {
+                    //Log Fatal retried x times
                     failureResult = result;
                 }
             }
@@ -42,7 +49,9 @@ namespace NUnit_retry
 
         private static bool TestFailed(TestResult result)
         {
-            return result.ResultState == ResultState.Error || result.ResultState == ResultState.Failure;
+            return result.ResultState == ResultState.Error   ||
+                   result.ResultState == ResultState.Failure ||
+                   result.ResultState == ResultState.Inconclusive;
         }
     }
 }

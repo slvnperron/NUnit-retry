@@ -11,7 +11,7 @@ namespace NUnit_retry
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class RetryAttribute : Attribute
     {
-        public RetryAttribute(int times = 5, int requiredPassCount = 1)
+        public RetryAttribute(int times = 3, int requiredPassCount = 1)
         {
             if (requiredPassCount > times)
             {

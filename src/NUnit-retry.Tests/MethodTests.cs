@@ -21,8 +21,8 @@ namespace NUnit_retry.Tests
         {
         }
 
-        [Test, Category("sgdfg")]
-        public void one_out_of_three()
+        [Test, Category("A"), Retry(10,5)]
+        public void Five_out_of_ten()
         {
             _i++;
             Console.WriteLine("{0}",_i);
@@ -39,8 +39,8 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [Test, Category("adsf")]
-        public void Two_out_of_four()
+        [Test, Category("B"), Retry(6, 3)]
+        public void Three_out_of_six()
         {
             
             _i++;
@@ -57,7 +57,7 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase()]
+        [TestCase(), Retry(5,2)]
         public void two_Out_of_five()
         {
             _i++;
@@ -76,8 +76,8 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase()]
-        public void two_Out_of_four1()
+        [TestCase(), Category("C"), Retry(3,2)]
+        public void two_out_of_Three()
         {
             _i++;
             Console.WriteLine("{0}", _i);
@@ -95,8 +95,8 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase()]
-        public void allPass()
+        [TestCase(), Category("D"), Retry()]
+        public void OnePass()
         {
             _i++;
             Console.WriteLine("{0}", _i);
@@ -114,9 +114,9 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase(0, "abc"),  Category("a")]
-        [TestCase(1, "123"),  Category("a")]
-        [TestCase(3, "#$%"),  Category("a")]
+        [TestCase(0, "abc"), Category("E")]
+        [TestCase(1, "123"), Category("F")]
+        [TestCase(3, "#$%"), Category("G"), Retry(11, 10)]
         public void PassAtSomePoint(int runTimes, string msg)
         {
             _i++;
@@ -135,7 +135,7 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        [TestCase("abc")]
+        [TestCase("H"), Retry(3), Category(("H"))]
         public void Fail(string output)
         {
             _i++;

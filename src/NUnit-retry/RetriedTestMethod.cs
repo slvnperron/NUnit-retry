@@ -36,21 +36,24 @@ namespace NUnit_retry
                 {
                     if (++successCount >= _requiredPassCount)
                     {
+                        
                         return result;
                     }
                 }
                 else
                 {
+                    //Log Fatal retried x times
                     failureResult = result;
                 }
             }
-
             return failureResult;
         }
 
         private static bool TestFailed(TestResult result)
         {
-            return result.ResultState == ResultState.Error || result.ResultState == ResultState.Failure;
+            return result.ResultState == ResultState.Error ||
+                   result.ResultState == ResultState.Failure ||
+                   result.ResultState == ResultState.Inconclusive;
         }
     }
 }
