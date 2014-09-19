@@ -15,11 +15,11 @@ namespace NUnit_retry.Tests
         [Test]
         public void ShouldSucceed_One_Time_Out_Of_3()
         {
+            TestsHelper.IncrementCurrentMethodExecutionTimes();
             var run = TestsHelper.GetCurrentMethodExecutionTimes();
 
-            if (run == 0 || run == 1)
+            if (run <= 2)
             {
-                TestsHelper.IncrementCurrentMethodExecutionTimes();
                 Assert.Fail();
             }
 
@@ -32,11 +32,11 @@ namespace NUnit_retry.Tests
         [Test]
         public void Inherited_ShouldSucceed_One_Time_Out_Of_3()
         {
+            TestsHelper.IncrementCurrentMethodExecutionTimes();
             var run = TestsHelper.GetCurrentMethodExecutionTimes();
 
-            if (run == 0 || run == 1)
+            if (run <= 2)
             {
-                TestsHelper.IncrementCurrentMethodExecutionTimes();
                 Assert.Fail();
             }
 
