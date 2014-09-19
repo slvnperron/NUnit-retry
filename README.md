@@ -1,4 +1,4 @@
-NUnit-retry
+NUnit-retry [![Build Status](http://teamcity.protorisk.com/app/rest/builds/buildType:(id:NUnitRetry_NUnitRetry)/statusIcon)](http://teamcity.protorisk.com)
 ===========
 
 A NUnit plugin that retries intermittently failing tests.
