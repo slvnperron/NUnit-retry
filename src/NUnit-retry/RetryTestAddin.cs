@@ -60,6 +60,7 @@ namespace NUnit_retry
 
                     test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
                 }
+
                 NUnitFramework.ApplyCommonAttributes(member, test);
             }
 
@@ -90,6 +91,7 @@ namespace NUnit_retry
                 }
                 return outputSuite;
             }
+
             return test;
         }
     }

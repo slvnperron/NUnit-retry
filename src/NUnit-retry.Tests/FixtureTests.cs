@@ -12,19 +12,6 @@ namespace NUnit_retry.Tests
     [Retry]
     public class FixtureTests
     {
-        [Test]
-        public void ShouldSucceed_One_Time_Out_Of_3()
-        {
-            TestsHelper.IncrementCurrentMethodExecutionTimes();
-            var run = TestsHelper.GetCurrentMethodExecutionTimes();
-
-            if (run <= 2)
-            {
-                Assert.Fail();
-            }
-
-            Assert.Pass();
-        }
     }
 
     public class InheritedAttribute : FixtureTests

@@ -4,6 +4,7 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -26,6 +27,10 @@ namespace NUnit_retry.Tests
             {
                 ExecutionsByMethodName.Add(method, 0);
             }
+
+#if DEBUG
+            Console.WriteLine("Run# (" + method + ") --> " + ExecutionsByMethodName[method]);
+#endif
 
             return ExecutionsByMethodName[method];
         }

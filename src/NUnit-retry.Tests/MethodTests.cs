@@ -11,11 +11,6 @@ namespace NUnit_retry.Tests
     [TestFixture]
     public class MethodTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
         [Test, Category("A"), Retry(10,5)]
         public void Five_out_of_ten()
         {

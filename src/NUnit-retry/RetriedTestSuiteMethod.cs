@@ -26,7 +26,7 @@ namespace NUnit_retry
             var successCount = 0;
             TestResult failureResult = null;
 
-            for (var i = 0; i < _tryCount; i++)
+            for (var i = 0; i <= _tryCount; i++)
             {
                 var result = base.Run(listener, filter);
 
