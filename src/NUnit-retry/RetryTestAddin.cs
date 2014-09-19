@@ -24,12 +24,12 @@ namespace NUnit_retry
 
         public Test Decorate(Test test, MemberInfo member)
         {
+            var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
+
             if (test is NUnitTestMethod)
             {
                 var testMethod = (NUnitTestMethod)test;
-
-                var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
-
+                
                 if (testMethod.FixtureType != null)
                 {
                     var fixtureAttrs =
@@ -60,8 +60,36 @@ namespace NUnit_retry
 
                     test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
                 }
+                NUnitFramework.ApplyCommonAttributes(member, test);
             }
 
+            if (test is ParameterizedMethodSuite)
+            {
+                var suite = test as ParameterizedMethodSuite;
+                RetriedParameterizedTestSuiteMethod outputSuite;
+
+                if (attrs.Any())
+                {
+                    var retryAttr = (attrs.First() as RetryAttribute);
+
+                    if (retryAttr == null) return test;
+
+                    outputSuite = new RetriedParameterizedTestSuiteMethod(member as MethodInfo, retryAttr.Times, retryAttr.RequiredPassCount);
+                }
+                else
+                {
+                    return test;
+                }
+
+                NUnitFramework.ApplyCommonAttributes(member, outputSuite);
+
+                outputSuite.RunState = suite.RunState;
+                foreach (NUnitTestMethod testMethod in suite.Tests)
+                {
+                    outputSuite.Add(testMethod);
+                }
+                return outputSuite;
+            }
             return test;
         }
     }
