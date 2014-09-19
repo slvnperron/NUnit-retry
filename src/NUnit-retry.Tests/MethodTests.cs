@@ -134,17 +134,5 @@ namespace NUnit_retry.Tests
 
             Assert.Pass();
         }
-
-        [TestCase("H"), Retry(4), Category(("H"))]
-        public void Fail(string output)
-        {
-            _i++;
-            Console.WriteLine("{0}", _i);
-            Console.WriteLine("{0}", _run);
-
-            _run++;
-            Console.WriteLine("Failed {0}", output);
-            Assert.Fail();
-        }
     }
 }
