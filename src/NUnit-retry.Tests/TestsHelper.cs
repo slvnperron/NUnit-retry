@@ -11,7 +11,7 @@ namespace NUnit_retry.Tests
 {
     public static class TestsHelper
     {
-        private static Dictionary<string, int> ExecutionsByMethodName { get; set; }
+        private static readonly Dictionary<string, int> ExecutionsByMethodName = new Dictionary<string, int>();
 
         public static string GetCurrentMethodName()
         {
