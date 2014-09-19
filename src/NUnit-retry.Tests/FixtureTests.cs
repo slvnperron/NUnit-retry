@@ -9,20 +9,19 @@ using NUnit.Framework;
 namespace NUnit_retry.Tests
 {
     [TestFixture]
-    [Retry]// 3 run 1 requiredPass
+    [Retry]
     public class FixtureTests
     {
-        private int _run;
-
         [Test]
         public void ShouldSucceed_One_Time_Out_Of_3()
         {
-            if (_run == 0 || _run == 1)
+            var run = TestsHelper.GetCurrentMethodExecutionTimes();
+
+            if (run == 0 || run == 1)
             {
-                _run++;
+                TestsHelper.IncrementCurrentMethodExecutionTimes();
                 Assert.Fail();
             }
-            _run++;
 
             Assert.Pass();
         }
@@ -30,17 +29,16 @@ namespace NUnit_retry.Tests
 
     public class InheritedAttribute : FixtureTests
     {
-        private int _run;
-
         [Test]
         public void Inherited_ShouldSucceed_One_Time_Out_Of_3()
         {
-            if (_run == 0 || _run == 1)
+            var run = TestsHelper.GetCurrentMethodExecutionTimes();
+
+            if (run == 0 || run == 1)
             {
-                _run++;
+                TestsHelper.IncrementCurrentMethodExecutionTimes();
                 Assert.Fail();
             }
-            _run++;
 
             Assert.Pass();
         }

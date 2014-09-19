@@ -4,8 +4,6 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
-using System;
-
 namespace NUnit_retry.Tests
 {
     using NUnit.Framework;
