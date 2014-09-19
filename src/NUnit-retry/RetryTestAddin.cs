@@ -26,69 +26,67 @@ namespace NUnit_retry
 
         public Test Decorate(Test test, MemberInfo member)
         {
-            RetryAttribute retryAttr = GetRetryAttribute(member, test);
+            var retryAttr = GetRetryAttribute(member, test);
 
-            if (retryAttr != null)
+            if (retryAttr == null) return test;
+
+            if (test is NUnitTestMethod)
             {
-                if (test is NUnitTestMethod)
+                return new RetriedTestMethod(
+                    (NUnitTestMethod)test,
+                    retryAttr.Times,
+                    retryAttr.RequiredPassCount);
+            }
+
+            if (!(test is ParameterizedMethodSuite)) return test;
+
+            var testMethodSuite = (ParameterizedMethodSuite)test;
+
+            System.Collections.IList newTests = new List<Test>();
+            foreach (Test childTest in testMethodSuite.Tests)
+            {
+                if (childTest is NUnitTestMethod)
                 {
-                    return new RetriedTestMethod(
-                        (NUnitTestMethod)test,
+                    var oldTest = (NUnitTestMethod)childTest;
+                    var newTest = new RetriedTestMethod(
+                        oldTest,
                         retryAttr.Times,
                         retryAttr.RequiredPassCount);
+
+                    newTests.Add(newTest);
                 }
-
-                if (test is ParameterizedMethodSuite)
+                else
                 {
-                    var testMethodSuite = (ParameterizedMethodSuite)test;
-
-                    System.Collections.IList newTests = new List<Test>();
-                    foreach (Test childTest in testMethodSuite.Tests)
-                    {
-                        if (childTest is NUnitTestMethod)
-                        {
-                            NUnitTestMethod oldTest = (NUnitTestMethod)childTest;
-                            RetriedTestMethod newTest = new RetriedTestMethod(
-                                oldTest,
-                                retryAttr.Times,
-                                retryAttr.RequiredPassCount);
-
-                            newTests.Add(newTest);
-                        }
-                        else
-                        {
-                            newTests.Add(childTest);
-                        }
-                    }
-
-                    testMethodSuite.Tests.Clear();
-                    foreach (Test newTest in newTests)
-                    {
-                        testMethodSuite.Add(newTest);
-                    }
-
-                    return testMethodSuite;
+                    newTests.Add(childTest);
                 }
             }
 
-            return test;
+            testMethodSuite.Tests.Clear();
+            foreach (Test newTest in newTests)
+            {
+                testMethodSuite.Add(newTest);
+            }
+
+            return testMethodSuite;
         }
 
         private static RetryAttribute GetRetryAttribute(MemberInfo member, Test testMethodSuite)
         {
-            RetryAttribute retryAttr = GetRetryAttribute(member);
+            var retryAttr = GetRetryAttribute(member);
 
             if (retryAttr == null && testMethodSuite.FixtureType != null)
             {
                 retryAttr = GetRetryAttribute(testMethodSuite.FixtureType);
             }
+
             return retryAttr;
         }
 
         private static RetryAttribute GetRetryAttribute(MemberInfo member)
         {
-            IEnumerable<RetryAttribute> attrs = member.GetCustomAttributes(typeof(RetryAttribute), true)
+            var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true)
                 .Cast<RetryAttribute>();
+
             return attrs.FirstOrDefault();
         }
     }
