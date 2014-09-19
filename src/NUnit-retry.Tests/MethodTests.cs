@@ -44,5 +44,38 @@ namespace NUnit_retry.Tests
 
             Assert.Pass();
         }
+
+        [TestCase(TestName = "TestCaseName")]
+        [Retry]
+        public void ShouldSucceed_One_Time_Out_Of_3_TestCase()
+        {
+            InterTestContext.IncrementMethodTries("1_on_3_TestCase");
+
+            if (InterTestContext.InterTestCounts["1_on_3_TestCase"] == 1)
+            {
+                Assert.Fail();
+            }
+
+            Assert.Pass();
+        }
+
+        public TestCaseData[] CaseSource
+        {
+            get { return new TestCaseData[] { new TestCaseData().SetName("TestCaseSourceName"), }; }
+        }
+
+        [TestCaseSource("CaseSource")]
+        [Retry]
+        public void ShouldSucceed_One_Time_Out_Of_3_TestCaseSource()
+        {
+            InterTestContext.IncrementMethodTries("1_on_3_TestCaseSource");
+
+            if (InterTestContext.InterTestCounts["1_on_3_TestCaseSource"] == 1)
+            {
+                Assert.Fail();
+            }
+
+            Assert.Pass();
+        }
     }
 }

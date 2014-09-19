@@ -4,6 +4,8 @@
 //  copyright ownership at http://nunit.org.    
 // /////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
+
 namespace NUnit_retry
 {
     using System.Linq;
@@ -17,52 +19,75 @@ namespace NUnit_retry
     {
         public bool Install(IExtensionHost host)
         {
-            var testCaseBuilders = host.GetExtensionPoint("TestDecorators");
-            testCaseBuilders.Install(this);
+            var testDecorators = host.GetExtensionPoint("TestDecorators");
+            testDecorators.Install(this);
             return true;
         }
 
         public Test Decorate(Test test, MemberInfo member)
         {
+            var retryAttr = GetRetryAttribute(member, test);
+
+            if (retryAttr == null) return test;
+
             if (test is NUnitTestMethod)
             {
-                var testMethod = (NUnitTestMethod)test;
+                return new RetriedTestMethod(
+                    (NUnitTestMethod)test,
+                    retryAttr.Times,
+                    retryAttr.RequiredPassCount);
+            }
 
-                var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true);
+            if (!(test is ParameterizedMethodSuite)) return test;
 
-                if (testMethod.FixtureType != null)
+            var testMethodSuite = (ParameterizedMethodSuite)test;
+
+            System.Collections.IList newTests = new List<Test>();
+            foreach (Test childTest in testMethodSuite.Tests)
+            {
+                if (childTest is NUnitTestMethod)
                 {
-                    var fixtureAttrs =
-                        testMethod.FixtureType.GetCustomAttributes(typeof(RetryAttribute), true).ToArray();
+                    var oldTest = (NUnitTestMethod)childTest;
+                    var newTest = new RetriedTestMethod(
+                        oldTest,
+                        retryAttr.Times,
+                        retryAttr.RequiredPassCount);
 
-                    if (fixtureAttrs.Length > 0)
-                    {
-                        var retryAttr = (fixtureAttrs[0] as RetryAttribute);
-
-                        if (retryAttr != null)
-                        {
-                            test = new RetriedTestMethod(
-                                testMethod.Method,
-                                retryAttr.Times,
-                                retryAttr.RequiredPassCount);
-                        }
-                    }
+                    newTests.Add(newTest);
                 }
-
-                if (attrs.Any())
+                else
                 {
-                    var retryAttr = (attrs.First() as RetryAttribute);
-
-                    if (retryAttr == null)
-                    {
-                        return test;
-                    }
-
-                    test = new RetriedTestMethod(testMethod.Method, retryAttr.Times, retryAttr.RequiredPassCount);
+                    newTests.Add(childTest);
                 }
             }
 
-            return test;
+            testMethodSuite.Tests.Clear();
+            foreach (Test newTest in newTests)
+            {
+                testMethodSuite.Add(newTest);
+            }
+
+            return testMethodSuite;
+        }
+
+        private static RetryAttribute GetRetryAttribute(MemberInfo member, Test testMethodSuite)
+        {
+            var retryAttr = GetRetryAttribute(member);
+
+            if (retryAttr == null && testMethodSuite.FixtureType != null)
+            {
+                retryAttr = GetRetryAttribute(testMethodSuite.FixtureType);
+            }
+
+            return retryAttr;
+        }
+
+        private static RetryAttribute GetRetryAttribute(MemberInfo member)
+        {
+            var attrs = member.GetCustomAttributes(typeof(RetryAttribute), true)
+                .Cast<RetryAttribute>();
+
+            return attrs.FirstOrDefault();
         }
     }
 }
