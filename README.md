@@ -19,9 +19,7 @@ Install-Package NUnit-retry
 Installation 
 --------------
 - Add a reference to nunit-retry.dll to your project. The project is available on NuGet
-- (Optional*) Copy nunit-retry.dll inside your NUnit 2.6.3 addins folder.
-
-* Only if you need the Retry capability on that machine.
+- (only if you need the Retry capability on this machine) Copy nunit-retry.dll inside your NUnit 2.6.3 addins folder.
 
 Compatibility
 -----------------
