@@ -25,8 +25,9 @@ namespace NUnit_retry.Tests
             Assert.Pass();
         }
 
-        //[TestCase(TestName = "TestCaseName")]
-        // TODO TestCases don't work
+        [Retry]
+        [TestCase(TestName = "TestCaseName")]
+        // TODO TestCases don't work at class-level
         public void ShouldSucceed_One_Time_Out_Of_3_TestCase()
         {
             InterTestContext.IncrementMethodTries("class_1_on_3_TestCase");
@@ -44,9 +45,10 @@ namespace NUnit_retry.Tests
             get { return new[] { new TestCaseData().SetName("TestCaseSourceName"), }; }
         }
 
-        //[TestCase(TestName = "TestCaseName")]
-        // TODO TestCaseSources don't work
-        //[TestCaseSource("CaseSource")]
+        [Retry]
+        [TestCase(TestName = "TestCaseName")]
+        // TODO TestCaseSources don't work at class level
+        [TestCaseSource("CaseSource")]
         public void ShouldSucceed_One_Time_Out_Of_3_TestCaseSource()
         {
             InterTestContext.IncrementMethodTries("class_1_on_3_TestCaseSource");
@@ -60,7 +62,14 @@ namespace NUnit_retry.Tests
         }
     }
 
-    public class InheritedAttribute : FixtureTests
+    [TestFixture]
+    [Retry]
+    public class BaseFixture
+    {
+        
+    }
+
+    public class InheritedAttribute : BaseFixture
     {
         [Test]
         public void Inherited_ShouldSucceed_One_Time_Out_Of_3()
