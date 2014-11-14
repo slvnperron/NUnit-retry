@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
-    <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <id>NUnit-retry</id>
+    <version>1.2.0</version>
+    <title>NUnit-retry</title>
+    <authors>Protorisk Ltd.</authors>
+    <owners>Sylvain Perron</owners>
     <projectUrl>https://github.com/slvnperron/NUnit-retry</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
+    <description>A NUnit plugin that retries intermittently failing tests.</description>
     <copyright>Copyright 2013</copyright>
     <tags>NUnit Tests Retry</tags>
   </metadata>
