@@ -33,10 +33,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +40,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FixtureTests.cs" />
@@ -51,13 +50,14 @@
     <Compile Include="MethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUpTests.cs" />
+    <Compile Include="SetupTeardownTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NUnit-retry\NUnit-retry.csproj">
-      <Project>{8eb152c4-2508-40c9-83b3-c745ef15b3af}</Project>
+      <Project>{8EB152C4-2508-40C9-83B3-C745EF15B3AF}</Project>
       <Name>NUnit-retry</Name>
     </ProjectReference>
   </ItemGroup>
