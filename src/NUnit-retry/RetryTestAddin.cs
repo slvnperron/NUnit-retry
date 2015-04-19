@@ -5,6 +5,7 @@
 // /////////////////////////////////////////////////////////////////////
 
 using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace NUnit_retry
 {
@@ -30,8 +31,12 @@ namespace NUnit_retry
 
             if (retryAttr == null) return test;
 
-            if (test is NUnitTestMethod)
+            if (test.GetType() == typeof(NUnitTestMethod) &&
+               ((NUnitTestMethod)test).Method.
+                   GetCustomAttributes(typeof(IgnoreAttribute), true).
+                   Length == 0)
             {
+
                 return new RetriedTestMethod(
                     (NUnitTestMethod)test,
                     retryAttr.Times,
@@ -45,7 +50,10 @@ namespace NUnit_retry
             System.Collections.IList newTests = new List<Test>();
             foreach (Test childTest in testMethodSuite.Tests)
             {
-                if (childTest is NUnitTestMethod)
+                if (childTest.GetType() == typeof(NUnitTestMethod) &&
+                   ((NUnitTestMethod)childTest).Method.
+                       GetCustomAttributes(typeof(IgnoreAttribute), true).
+                       Length == 0)
                 {
                     var oldTest = (NUnitTestMethod)childTest;
                     var newTest = new RetriedTestMethod(

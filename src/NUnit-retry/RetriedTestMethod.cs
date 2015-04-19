@@ -8,7 +8,7 @@ namespace NUnit_retry
 {
     using NUnit.Core;
 
-    public class RetriedTestMethod : Test
+    public class RetriedTestMethod : NUnitTestMethod
     {
         private readonly int requiredPassCount;
 
@@ -17,7 +17,7 @@ namespace NUnit_retry
         private readonly NUnitTestMethod backingTest;
 
         public RetriedTestMethod(NUnitTestMethod test, int tryCount, int requiredPassCount)
-            :base(test.TestName)
+            : base(test.Method)
         {
             this.backingTest = test;
             this.tryCount = tryCount;
@@ -37,7 +37,7 @@ namespace NUnit_retry
 
             for (var i = 0; i < this.tryCount; i++)
             {
-                var result = backingTest.Run(listener, filter);
+                var result = base.Run(listener, filter);
 
                 if (!TestFailed(result))
                 {
